@@ -1,6 +1,7 @@
 import os
 import litellm
-from crewai import Agent, Task, Crew, Process, LLM
+from crewai import Agent, Task, Crew, Process, LLM 
+from tools import AST, knowledge_base, perform_static_checks
 
 
 os.environ["GOOGLE_API_KEY"] = "AIzaSyB1KA8xtyD-sXlRlkQGb1VbxWGVKH-3FtM"
@@ -18,6 +19,7 @@ analyser = Agent(
         "without suggesting fixes or solutions."
     ),
     llm = model,
+    tools=[AST],
     verbose=True,
     allow_delegation=False
 )
@@ -77,18 +79,3 @@ code_generator = Agent(
     verbose=True,
     allow_delegation=False
 )
-
-# # 6. Discriminator Agent
-# discriminator = Agent(
-#     role='Code Discriminator & Tester',
-#     goal='Perform a final review of the repaired code for obvious mistakes and validate its correctness using provided testing tools.',
-#     backstory=(
-#         "You are the last line of defense in the program repair pipeline. Your critical eye "
-#         "identifies any logical flaws or syntax errors overlooked by the Solver. More importantly, "
-#         "you rigorously test the repaired code against a suite of test cases to ensure its "
-#         "functional correctness. You only approve code that passes all tests and appears robust."
-#     ),
-#     llm = model,
-#     verbose=True,
-#     allow_delegation=False
-# )

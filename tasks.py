@@ -79,6 +79,7 @@ propose_solution_task = Task(
         "'{bug_analysis}'\n\n"
         "And the suggested repair strategies:\n\n"
         "'{repair_strategies}'\n\n"
+        "{test_results}"
         "Formulate a precise, textual description of the logical fix."
         "Propose concrete and practical solutions for the identified issue."
         "Come up with python solution that aligns with the recommended strategies."
@@ -104,26 +105,4 @@ generate_corrected_code_task = Task(
     context=[propose_solution_task]
 )
 
-# # Task 6: Discriminate and Test
-# discriminate_code_task = Task(
-#     description=(
-#         "Perform a final review of the following corrected code for any obvious mistakes "
-#         "and then rigorously test it using the provided test cases. "
-#         "Original buggy code for context:\n\n"
-#         "```python\n{buggy_code}\n```\n\n"
-#         "Corrected code:\n\n"
-#         "```python\n{corrected_code}\n```\n\n"
-#         "Test cases to apply:\n\n"
-#         "```python\n{test_cases}\n```\n\n"
-#         "First, describe any immediate observations or potential issues with the corrected code. "
-#         "Then, use the `run_python_tests` tool to execute the tests. "
-#         "Finally, based on your review and the test results, provide a final verdict: "
-#         "'CODE ACCEPTED' if it looks good and passes tests, or 'CODE REJECTED' with reasons if not."
-#     ),
-#     expected_output=(
-#         "A statement of any obvious mistakes found, followed by the test results, "
-#         "and a final verdict ('CODE ACCEPTED' or 'CODE REJECTED' with reasons)."
-#     ),
-#     agent=discriminator,
-#     async_execution=False
-# )
+
