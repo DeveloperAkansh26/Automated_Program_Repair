@@ -57,7 +57,7 @@ def perform_static_checks(code: str, max_line_length: int = 120) -> dict:
         "unused_imports_check": {"status": "success", "issues": []},
     }
 
-    # --- 1. Syntax Check ---
+    
     try:
         tree = ast.parse(code)
     except SyntaxError as e:
@@ -69,9 +69,7 @@ def perform_static_checks(code: str, max_line_length: int = 120) -> dict:
             "line": e.lineno,
             "offset": e.offset
         }
-        # If there's a syntax error, subsequent AST-based checks might fail,
-        # so we return early.
-        return results
+        
     except Exception as e:
         results["overall_status"] = "error"
         results["syntax_check"] = {
@@ -81,7 +79,6 @@ def perform_static_checks(code: str, max_line_length: int = 120) -> dict:
         }
         return results
 
-    # --- 2. Line Length Check ---
     lines = code.splitlines()
     for i, line in enumerate(lines):
         if len(line) > max_line_length:
@@ -91,18 +88,16 @@ def perform_static_checks(code: str, max_line_length: int = 120) -> dict:
                 f"Line {i+1} exceeds max length of {max_line_length} chars ({len(line)} chars)."
             )
 
-    # --- 3. Bare Except Block Check ---
-    # We use an AST visitor to find bare excepts more robustly
     class BareExceptVisitor(ast.NodeVisitor):
         def __init__(self):
             self.bare_except_issues = []
 
         def visit_ExceptHandler(self, node):
-            if node.type is None:  # This indicates a bare 'except:'
+            if node.type is None:
                 self.bare_except_issues.append(
                     f"Bare 'except:' found on line {node.lineno}."
                 )
-            self.generic_visit(node) # Continue visiting children
+            self.generic_visit(node)
 
     visitor = BareExceptVisitor()
     visitor.visit(tree)
@@ -111,17 +106,11 @@ def perform_static_checks(code: str, max_line_length: int = 120) -> dict:
         results["bare_except_check"]["status"] = "warning"
         results["bare_except_check"]["issues"] = visitor.bare_except_issues
 
-    # --- 4. Unused Imports Check ---
-    # This is a bit more complex as it requires tracking defined names vs. used names.
-    # For a simplified demonstration:
-    # 1. Collect all imported names.
-    # 2. Collect all names used in the code.
-    # 3. Find imported names that are not used.
 
     imported_names = set()
     used_names = set()
 
-    # Collect imported names
+
     for node in ast.walk(tree):
         if isinstance(node, (ast.Import, ast.ImportFrom)):
             for alias in node.names:
@@ -131,25 +120,16 @@ def perform_static_checks(code: str, max_line_length: int = 120) -> dict:
                 else:
                     imported_names.add(name_to_track)
 
-    # Collect used names
-    # This is a simplified approach and might have false positives/negatives
-    # A robust check requires full scope analysis.
-    # Here, we'll look for simple Name nodes in Load context.
     for node in ast.walk(tree):
         if isinstance(node, ast.Name) and isinstance(node.ctx, ast.Load):
             used_names.add(node.id)
-        elif isinstance(node, ast.Attribute): # Handle obj.attribute
-            # This is a very basic attempt to track base object of an attribute
-            # For 'requests.get', 'requests' is the used name
+        elif isinstance(node, ast.Attribute): 
             if isinstance(node.value, ast.Name):
                 used_names.add(node.value.id)
 
-    # Check for unused imports
     unused_imports = []
     for imported_name in imported_names:
         if imported_name not in used_names:
-            # A very simple regex check to find the line of the import
-            # This is not robust for complex imports but serves demonstration
             import_line_match = re.search(rf'^(?:import\s+{re.escape(imported_name)}|from\s+.*\s+import\s+.*\s+as\s+{re.escape(imported_name)}|from\s+.*\s+import\s+{re.escape(imported_name)})', code, re.MULTILINE)
             line_number = None
             if import_line_match:

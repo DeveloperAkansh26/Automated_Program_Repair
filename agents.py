@@ -22,7 +22,6 @@ analyser = Agent(
     allow_delegation=False
 )
 
-# 2. Categorizer Agent
 categorizer = Agent(
     role='Bug Categorizer',
     goal='Categorize the type of bug based on the detailed analysis provided by the Analyser into one of 14 bug categories.',
@@ -37,7 +36,6 @@ categorizer = Agent(
     allow_delegation=False
 )
 
-# 3. Extractor Agent
 extractor = Agent(
     role='Strategy Extractor',
     goal='Identify and suggest the most suitable program repair strategies based on the categorized bug type.',
@@ -52,7 +50,6 @@ extractor = Agent(
     allow_delegation=False
 )
 
-# 4. Solution Proposal Agent
 solution_proposer = Agent(
     role='Solution Proposer',
     goal='Formulate a precise, textual description of the logical fix required for the bug, without writing the code itself.',
@@ -67,7 +64,6 @@ solution_proposer = Agent(
     allow_delegation=False
 )
 
-# 5. Code Generator Agent
 code_generator = Agent(
     role='Code Generator',
     goal='Translate a given solution proposal into functionally correct Python code.',

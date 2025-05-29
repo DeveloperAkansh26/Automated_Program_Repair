@@ -3,7 +3,6 @@ from tools import AST, knowledge_base, perform_static_checks
 from agents import analyser, categorizer, extractor, solution_proposer, code_generator
 
 
-# Task 1: Analyse Bug
 analyse_bug_task = Task(
     description=(
         "Analyze the following buggy code snippet:\n\n"
@@ -17,7 +16,6 @@ analyse_bug_task = Task(
     async_execution=False
 )
 
-# Task 2: Categorize Bug
 categorize_bug_task = Task(
     description=(
         "Based on the following bug analysis:\n\n"
@@ -45,7 +43,6 @@ categorize_bug_task = Task(
     async_execution=False
 )
 
-# Task 3: Extract Strategies
 extract_strategies_task = Task(
     description=(
         """The different bug categories possible are:
@@ -74,7 +71,6 @@ extract_strategies_task = Task(
     context=[categorize_bug_task]
 )
 
-# Task 4: Propose Solution
 propose_solution_task = Task(
     description=(
         "Given the original buggy code:\n\n"
@@ -92,7 +88,6 @@ propose_solution_task = Task(
     async_execution=False
 )
 
-# Task 5: Generate Corrected Code
 generate_corrected_code_task = Task(
     description=(
         "Given the original buggy code:\n\n"
