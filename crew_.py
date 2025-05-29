@@ -17,7 +17,7 @@ from tools import AST, knowledge_base, perform_static_checks
 
 
 os.environ['LITELLM_LOG'] = 'DEBUG'
-os.environ["GOOGLE_API_KEY"] = "AIzaSyB1KA8xtyD-sXlRlkQGb1VbxWGVKH-3FtM"
+os.environ["GOOGLE_API_KEY"] = ""
 os.environ["OPENAI_API_KEY"] = "sk-dummy"
 
 

@@ -4,7 +4,7 @@ from crewai import Agent, Task, Crew, Process, LLM
 from tools import AST, knowledge_base, perform_static_checks
 
 
-os.environ["GOOGLE_API_KEY"] = "AIzaSyB1KA8xtyD-sXlRlkQGb1VbxWGVKH-3FtM"
+os.environ["GOOGLE_API_KEY"] = ""
 model = LLM(model="gemini/gemini-2.0-flash", temperature=0.3, api_key=os.environ["GOOGLE_API_KEY"])
 
 
